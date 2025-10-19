@@ -55,10 +55,16 @@ class ExampleAnalysis:
         df_hist.set_xlabel("Creator Names")
         df_hist.set_ylabel("# of issues created")
         # Plot the chart
-        plt.show() 
-                        
-    
+        plt.show()
 
-if __name__ == '__main__':
-    # Invoke run method when running this module directly
-    ExampleAnalysis().run()
+class Analysis1():
+    def __init__(self):
+        pass
+
+class Analysis2():
+    def __init__(self):
+        pass
+
+class Analysis3():
+    def __init__(self):
+        pass
