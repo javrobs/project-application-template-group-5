@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 from data_loader import DataLoader
-from model import Issue,Event
+from model import Issue
 import config
 
 class ExampleAnalysis:
@@ -60,11 +60,17 @@ class ExampleAnalysis:
 class Analysis1():
     def __init__(self):
         pass
+    def run(self):
+        pass
 
 class Analysis2():
     def __init__(self):
         pass
+    def run(self):
+        pass
 
 class Analysis3():
     def __init__(self):
+        pass
+    def run(self):
         pass

@@ -1,0 +1,101 @@
+---
+config:
+  layout: dagre
+---
+classDiagram
+direction TB
+    class run.py {
+	    +parse_args() args:
+    }
+    class config.py {
+	    --global variable --
+	    -dict config$
+	    -init_config()
+	    -get_default_path() String
+	    +get_parameter()
+	    +overwrite_from_args(args)
+	    +set_parameter(name, value)
+	    +convert_to_typed_value(value) value
+    }
+    namespace models {
+        class model.py {
+        }
+        class State {
+            +open$
+            +closed$
+        }
+        class Event {
+            +String event_type
+            +String author
+            +Datetime event_date
+            +String comment
+            -init(jobj)
+            +from_json(jobj)
+        }
+        class Issue {
+            +String url
+            +String creator
+            +List[String] labels
+            +State state
+            +List[String] assignees
+            +String title
+            +String text
+            +Datetime created_date
+            +Datetime updated_date
+            +String timeline_url
+            +List[Event] events
+            -init(jobj)
+            +from_json(jobj)
+        }
+    }
+    namespace Data loader{
+        class data_loader.py {
+            -List[Issue] ISSUES$
+        }
+        class DataLoader {
+            +String data_path
+            -init()
+            +get_issues() List[Issue]
+            -load() List[Issue]
+        }
+    }
+    namespace Analyses {
+            class analyses.py {
+        }
+
+        class BottleNeckAnalysis {
+        -String LABEL
+            -init()
+            +run()
+        }
+        class TimeLineAnalysis {
+        -Date START_DATE
+        -Date END_DATE
+            -init()
+            +run()
+        }
+        class MonthCountAnalysis {
+        -String LABEL
+            -init()
+            +run()
+        }
+	}
+    
+    model.py --o State
+    model.py --o Event
+    model.py --o Issue
+    Issue --* Event
+    Issue --o State
+    data_loader.py --o DataLoader
+    data_loader.py --> Issue
+    data_loader.py --> config.py
+    analyses.py --o BottleNeckAnalysis
+    analyses.py --o TimeLineAnalysis
+    analyses.py --o MonthCountAnalysis
+    run.py --> config.py
+    run.py --> BottleNeckAnalysis
+    run.py --> TimeLineAnalysis
+    run.py --> MonthCountAnalysis
+    DataLoader <-- analyses.py
+    config.py <-- analyses.py
+    Issue <-- analyses.py

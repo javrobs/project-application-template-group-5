@@ -1,0 +1,31 @@
+erDiagram
+	direction TB
+	ISSUE {
+		number int  ""  
+		url string  ""  
+		state boolean  ""  
+		title string  ""  
+		text string  ""  
+		created_date datetime  ""  
+		updated_time datetime  ""  
+	}
+	LABEL {
+		category string  ""  
+		subcategory string  ""  
+	}
+	USER {
+		name string  "" 
+		is_collaborator boolean  
+	}
+	EVENT {
+		date datetime  ""  
+		comment string  ""  
+		event_type string
+	}
+
+	ISSUE}o--o{LABEL:"contains"
+	ISSUE||--o{USER:"is assigned"
+	ISSUE}o--||USER:"creates"
+	EVENT}o--||USER:"authors"
+	EVENT}o--||ISSUE:"contains"
+	
