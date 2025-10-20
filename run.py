@@ -8,7 +8,7 @@ the command line to run the analyses.
 import argparse
 
 import config
-from analysis import ExampleAnalysis, Analysis1, Analysis2, Analysis3
+from analyses import ExampleAnalysis, Analysis1, Analysis2, Analysis3
 
 
 def parse_args():
