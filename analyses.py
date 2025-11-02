@@ -1,4 +1,4 @@
-
+from collections import defaultdict, Counter
 from typing import List
 import matplotlib.pyplot as plt
 import numpy as np
@@ -65,9 +65,75 @@ class Analysis1():
 
 class Analysis2():
     def __init__(self):
-        pass
+        # Get all the issues in the issues list
+        self.ISSUE_YEAR = config.get_parameter('issue_year')
+
     def run(self):
-        pass
+        issues: List[Issue] = DataLoader().get_issues()
+
+        if self.ISSUE_YEAR is None:
+            print(f"⚠️ No issue year provided exiting application.")
+            return
+
+        all_issues = False
+        year = None
+        if self.ISSUE_YEAR == 'all':
+            all_issues = True
+        else:
+            year = int (self.ISSUE_YEAR)
+
+        if year is None:
+            print(f"⚠️ Issue year provided is not a number, exiting application.")
+            return
+
+        if all_issues:
+            filtered_issues = issues
+        else:
+            filtered_issues = [
+                issue for issue in issues
+                if issue.created_date and issue.created_date.year == year and issue.labels
+            ]
+
+        # ---------------------------
+        # Aggregate monthly counts
+        # ---------------------------
+        monthly_counts = defaultdict(lambda: Counter())
+
+        for issue in filtered_issues:
+            month = issue.created_date.strftime("%Y-%m")
+            for label in issue.labels:
+                monthly_counts[month][label] += 1
+
+        # ---------------------------
+        # Aggregate top labels
+        # ---------------------------
+        total_label_counts = Counter()
+        for _, label_counts in monthly_counts.items():
+            total_label_counts.update(label_counts)
+
+        top_labels = [l for l, _ in total_label_counts.most_common(6)]
+
+        months = sorted(monthly_counts.keys())
+        data = {label: [monthly_counts[m][label] for m in months] for label in top_labels}
+
+        # ---------------------------
+        # Plot stacked bar chart
+        # ---------------------------
+        fig, ax = plt.subplots(figsize=(10, 5))
+        bottom = [0] * len(months)
+        colors = ['#4C72B0', '#55A868', '#C44E52', '#8172B3', '#CCB974', '#64B5CD']
+
+        for label, color in zip(top_labels, colors):
+            ax.bar(months, data[label], bottom=bottom, label=label, color=color, alpha=0.85)
+            bottom = [bottom[i] + data[label][i] for i in range(len(months))]
+
+        ax.set_title(f"Monthly Issue Creation Trend by Label ({self.ISSUE_YEAR})")
+        ax.set_xlabel("Month")
+        ax.set_ylabel("Number of Issues Created")
+        ax.legend(title="Labels")
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        plt.show()
 
 class Analysis3():
     def __init__(self):
