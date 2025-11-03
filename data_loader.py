@@ -5,11 +5,13 @@ from typing import List
 import config
 from model import Issue
 from datetime import datetime
+from functools import reduce
 
 # Store issues as singleton to avoid reloads
 _ISSUES:List[Issue] = None
 _MIGRATION_DATE:datetime = None
 _LABEL_CATEGORY_LIST:List[str] = None
+_YEAR_RANGE:List[int] = None
 
 class DataLoader:
     """
@@ -59,6 +61,18 @@ class DataLoader:
             _LABEL_CATEGORY_LIST = list(set(label_categories))
             print(f"Loaded label categories",', '.join(_LABEL_CATEGORY_LIST))
         return _LABEL_CATEGORY_LIST 
+    
+    def get_year_range(self):
+        """
+        This returns the years included in the dataset as a list.
+        """
+        global _YEAR_RANGE 
+        if _YEAR_RANGE is None:
+            issues = self.get_issues()
+            created = [issue.created_date.year for issue in issues]
+            _YEAR_RANGE = [str(each) for each in range(min(created),max(created)+1)]
+            print("Loaded years")
+        return _YEAR_RANGE 
 
     
     def _load(self):

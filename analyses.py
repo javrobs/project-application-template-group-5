@@ -98,15 +98,17 @@ class Analysis1:
 
 class Analysis2:
     def __init__(self):
-        # Get all the issues in the issues list
-        self.ISSUE_YEAR = config.get_parameter('issue_year')
+        self.loader = DataLoader()
+        self.set_year(config.get_parameter('issue_year'))
+
+    def set_year(self, value):
+        valid_years = self.loader.get_year_range() + ["all"]
+        while not value or value not in valid_years:
+            value = input(f"Choose a valid year from the following list {valid_years}: ")
+        self.ISSUE_YEAR:str = value
 
     def run(self):
-        issues: List[Issue] = DataLoader().get_issues()
-
-        if self.ISSUE_YEAR is None:
-            print(f"⚠️ No issue year provided exiting application.")
-            return
+        issues: List[Issue] = self.loader.get_issues()
 
         all_issues = False
         year = None
@@ -114,10 +116,6 @@ class Analysis2:
             all_issues = True
         else:
             year = int (self.ISSUE_YEAR)
-
-        if year is None:
-            print(f"⚠️ Issue year provided is not a number, exiting application.")
-            return
 
         if all_issues:
             filtered_issues = issues
@@ -135,7 +133,7 @@ class Analysis2:
         for issue in filtered_issues:
             month = issue.created_date.strftime("%Y-%m")
             for label in issue.labels:
-                monthly_counts[month][label] += 1
+                monthly_counts[month][label.full_label()] += 1
 
         # ---------------------------
         # Aggregate top labels
