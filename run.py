@@ -34,6 +34,10 @@ def parse_args():
     # Optional parameter for analyses focusing on a specific label
     ap.add_argument('--label', '-l', type=str, required=False,
                     help='Optional parameter for analyses focusing on a specific label')
+
+    # Optional parameter for analyses focusing on issue based on years
+    ap.add_argument('--issue-year', '-i', type=str, required=False,
+                    help='Optional parameter for analyses focusing on a specific year or get all data using "all"')
     
     # Optional parameter for analyses focusing on a specific category
     ap.add_argument('--category', '-c', type=str, required=False,
