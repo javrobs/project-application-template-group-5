@@ -18,7 +18,7 @@ class Analysis1:
         
 
     def set_category(self, value):
-        valid_categories = self.loader.get_label_categories()
+        valid_categories:List[str] = self.loader.get_label_categories()
         while value == "" or value not in valid_categories:
             value = input(f"Choose a valid category from the following list [{(', ').join(valid_categories)}]: ")
         self.CATEGORY:str = value
@@ -63,11 +63,20 @@ class Analysis1:
 class Analysis2:
     def __init__(self):
         self.loader = DataLoader()
-        self.set_year(config.get_parameter('issue_year'))
+        self.set_category(config.get_parameter('category'))
+        self.set_year(config.get_parameter('year'))
+
+    def set_category(self, value):
+        valid_categories:List[str] = self.loader.get_label_categories()
+        while value == "" or value not in valid_categories:
+            value = input(f"Choose a valid category from the following list [{(', ').join(valid_categories)}]: ")
+        self.CATEGORY:str = value
+  
 
     def set_year(self, value):
-        valid_years = self.loader.get_year_range() + ["all"]
-        while not value or value not in valid_years:
+        valid_years:List[str] = self.loader.get_year_range() + ["all"]
+        value = str(value)
+        while value == "" or value not in valid_years:
             value = input(f"Choose a valid year from the following list {valid_years}: ")
         self.ISSUE_YEAR:str = value
 
@@ -76,6 +85,7 @@ class Analysis2:
 
         all_issues = False
         year = None
+        category = self.CATEGORY
         if self.ISSUE_YEAR == 'all':
             all_issues = True
         else:
@@ -96,8 +106,8 @@ class Analysis2:
 
         for issue in filtered_issues:
             month = issue.created_date.strftime("%Y-%m")
-            for label in issue.labels:
-                monthly_counts[month][label.full_label()] += 1
+            for label in [label.sublabel for label in issue.labels if label.category == category]:
+                monthly_counts[month][label] += 1
 
         # ---------------------------
         # Aggregate top labels
@@ -121,10 +131,10 @@ class Analysis2:
             ax.bar(months, data[label], bottom=bottom, label=label, color=color, alpha=0.85)
             bottom = [bottom[i] + data[label][i] for i in range(len(months))]
 
-        ax.set_title(f"Monthly Issue Creation Trend by Label ({self.ISSUE_YEAR})")
+        ax.set_title(f"Monthly Issue Creation Trend by {category} ({self.ISSUE_YEAR})")
         ax.set_xlabel("Month")
         ax.set_ylabel("Number of Issues Created")
-        ax.legend(title="Labels")
+        ax.legend(title=category)
         plt.xticks(rotation=45)
         plt.tight_layout()
         plt.show()
@@ -136,7 +146,7 @@ class Analysis3:
         self.OTHER_CUTOUT = config.get_parameter('other_cutout',2) / 100
 
     def set_category(self, value):
-        valid_categories = self.loader.get_label_categories()
+        valid_categories:List[str] = self.loader.get_label_categories()
         while value == "" or value not in valid_categories:
             value = input(f"Choose a valid category from the following list [{(', ').join(valid_categories)}]: ")
         self.CATEGORY:str = value
