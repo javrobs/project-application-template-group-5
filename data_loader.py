@@ -59,7 +59,7 @@ class DataLoader:
             for issue in issues:
                 label_categories += [label.category for label in issue.labels]
             _LABEL_CATEGORY_LIST = list(set(label_categories))
-            print(f"Loaded label categories",', '.join(_LABEL_CATEGORY_LIST))
+            print(f"Loaded label categories")
         return _LABEL_CATEGORY_LIST 
     
     def get_year_range(self):
