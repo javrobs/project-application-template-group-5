@@ -4,9 +4,12 @@ from typing import List
 
 import config
 from model import Issue
+from datetime import datetime
 
 # Store issues as singleton to avoid reloads
 _ISSUES:List[Issue] = None
+_MIGRATION_DATE:datetime = None
+_LABEL_CATEGORY_LIST:List[str] = None
 
 class DataLoader:
     """
@@ -29,6 +32,34 @@ class DataLoader:
             _ISSUES = self._load()
             print(f'Loaded {len(_ISSUES)} issues from {self.data_path}.')
         return _ISSUES
+    
+    def get_migration_date(self):
+        """
+        This should be invoked by other parts of the application to get access
+        to the latest date contained in the dataset (to obtain issue age, for example).
+        Returns an aware datetime object
+        """
+        global _MIGRATION_DATE # to access it within the function
+        if _MIGRATION_DATE is None:
+            issues = self.get_issues()
+            _MIGRATION_DATE = max([max([event.event_date for event in issue.events if event.event_date]) for issue in issues])
+            print(f"Loaded migration date",_MIGRATION_DATE)
+        return _MIGRATION_DATE 
+    
+    def get_label_categories(self):
+        """
+        This returns the categories of labels contained in the dataset as a list.
+        """
+        global _LABEL_CATEGORY_LIST # to access it within the function
+        if _LABEL_CATEGORY_LIST is None:
+            issues = self.get_issues()
+            label_categories = []
+            for issue in issues:
+                label_categories += [label.category for label in issue.labels]
+            _LABEL_CATEGORY_LIST = list(set(label_categories))
+            print(f"Loaded label categories",', '.join(_LABEL_CATEGORY_LIST))
+        return _LABEL_CATEGORY_LIST 
+
     
     def _load(self):
         """

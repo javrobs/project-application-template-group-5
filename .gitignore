@@ -163,3 +163,4 @@ cython_debug/
 
 # Ignore JSON file with all data
 poetry_issues_all.json
+ignore/*

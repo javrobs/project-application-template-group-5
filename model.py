@@ -38,14 +38,24 @@ class Event:
             pass
         self.label = jobj.get('label')
         self.comment = jobj.get('comment')
-        
+
+
+class Label:
+    def __init__(self, label:str):
+        split_label = label.split('/')
+        self.category:str = split_label[0]
+        if len(split_label) == 2:
+            self.sublabel:str = split_label[1]        
+
+    def full_label(self):
+        return self.category + "/" + self.sublabel if getattr(self,"sublabel",None) else self.category
         
 class Issue:
     
     def __init__(self, jobj:any=None):
         self.url:str = None
         self.creator:str = None
-        self.labels:List[str] = []
+        self.labels:List[Label] = []
         self.state:State = None
         self.assignees:List[str] = []
         self.title:str = None
@@ -62,7 +72,7 @@ class Issue:
     def from_json(self, jobj:any):
         self.url = jobj.get('url')
         self.creator = jobj.get('creator')
-        self.labels = jobj.get('labels',[])
+        self.labels = [Label(label) for label in jobj.get('labels',[])]
         self.state = State[jobj.get('state')]
         self.assignees = jobj.get('assignees',[])
         self.title = jobj.get('title')

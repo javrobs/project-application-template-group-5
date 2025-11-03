@@ -35,6 +35,12 @@ def parse_args():
     ap.add_argument('--label', '-l', type=str, required=False,
                     help='Optional parameter for analyses focusing on a specific label')
     
+    # Optional parameter for analyses focusing on a specific category
+    ap.add_argument('--category', '-c', type=str, required=False,
+                    help='Optional parameter for analyses focusing on a specific category of label')
+    
+
+    
     return ap.parse_args()
 
 
