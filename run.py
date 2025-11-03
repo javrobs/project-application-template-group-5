@@ -8,7 +8,7 @@ the command line to run the analyses.
 import argparse
 
 import config
-from analyses import ExampleAnalysis, Analysis1, Analysis2, Analysis3
+from analyses import Analysis1, Analysis2, Analysis3
 
 
 def parse_args():
@@ -43,6 +43,10 @@ def parse_args():
     ap.add_argument('--category', '-c', type=str, required=False,
                     help='Optional parameter for analyses focusing on a specific category of label')
     
+    # Optional parameter for analyses grouping labels with a percentage cutout
+    ap.add_argument('--other-cutout', '-o', type=int, required=False,
+                    help='Percentage cutout for legend aggrupation of label per category in figure')
+    
 
     
     return ap.parse_args()
@@ -55,9 +59,7 @@ args = parse_args()
 config.overwrite_from_args(args)
     
 # Run the feature specified in the --feature flag
-if args.feature == 0:
-    ExampleAnalysis().run()
-elif args.feature == 1:
+if args.feature == 1:
     Analysis1().run()
 elif args.feature == 2:
     Analysis2().run()

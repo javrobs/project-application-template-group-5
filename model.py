@@ -65,10 +65,21 @@ class Issue:
         self.updated_date:datetime = None
         self.timeline_url:str = None
         self.events:List[Event] = []
+        self.closed_date:datetime = None
         
         if jobj is not None:
             self.from_json(jobj)
-    
+
+    def set_closed_date(self):
+        if self.state == "open":
+            return False
+        # closed_events = 
+        latest_closed_date = max([event.event_date for event in self.events if event.event_type=="closed" and event.event_date],default=None)
+        latest_reopen_date = max([event.event_date for event in self.events if event.event_type=="reopened" and event.event_date],default=None)
+        if  latest_reopen_date and latest_closed_date and latest_reopen_date > latest_closed_date:
+            return False
+        self.closed_date = latest_closed_date
+
     def from_json(self, jobj:any):
         self.url = jobj.get('url')
         self.creator = jobj.get('creator')
@@ -91,3 +102,4 @@ class Issue:
             pass
         self.timeline_url = jobj.get('timeline_url')
         self.events = [Event(jevent) for jevent in jobj.get('events',[])]
+        self.set_closed_date()
