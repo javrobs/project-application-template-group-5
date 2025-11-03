@@ -45,7 +45,9 @@ class Label:
         split_label = label.split('/')
         self.category:str = split_label[0]
         if len(split_label) == 2:
-            self.sublabel:str = split_label[1]        
+            self.sublabel:str = split_label[1] 
+        else:
+            self.sublabel:str = ""       
 
     def full_label(self):
         return self.category + "/" + self.sublabel if getattr(self,"sublabel",None) else self.category
