@@ -59,8 +59,9 @@ That will output basic information about the issues to the command line.
 
 #### Parameters:
 - Year: The year to analyze. If this parameter isn't provided, the user will be asked to input it for the analysis to run. Input it in the command as `--year N` or `-y N`. 
+- Category: A required parameter that specifies the category of label to be analyzed. If this parameter isn't provided the user will be asked to input it for the analysis to run. Input it in the command as `--category X` or `-c X`, where X can be any of the label categories, for example __area__ or __kind__. 
 #### Output:
-- Figure: How many issues were open that year, month by month, stacked by top 10 most common labels.
+- Figure: How many issues were open that year, month by month, stacked by top 10 most labels in the category.
 
 
 ### Month by month opened issues
