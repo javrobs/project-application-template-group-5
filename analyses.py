@@ -8,13 +8,13 @@ from model import Issue
 import config
 
 
-COLORS = ['#4C72B0', '#55A868', '#C44E52', '#8172B3', '#CCB974', '#64B5CD']
+COLORS = ["#2E65AD", '#55A868', '#C44E52', "#7A5DD8", "#BB9F3B", '#64B5CD', "#DD8A32", "#DC4CC4", "#B6EB54", "#3ACE9F"]
 
 class Analysis1:
     def __init__(self):
         self.loader = DataLoader()
         self.set_category(config.get_parameter('category'))
-        self.OTHER_CUTOUT = config.get_parameter('other_cutout',2) / 100
+        self.OTHER_CUTOUT = config.get_parameter('other_cutout',5) / 100
         
 
     def set_category(self, value):
@@ -106,7 +106,7 @@ class Analysis2:
         for _, label_counts in monthly_counts.items():
             total_label_counts.update(label_counts)
 
-        top_labels = [l for l, _ in total_label_counts.most_common(6)]
+        top_labels = [l for l, _ in total_label_counts.most_common(10)]
 
         months = sorted(monthly_counts.keys())
         data = {label: [monthly_counts[m][label] for m in months] for label in top_labels}
